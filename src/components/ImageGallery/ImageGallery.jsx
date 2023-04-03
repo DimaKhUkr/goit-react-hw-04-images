@@ -1,5 +1,5 @@
 import { Gallery, LoaderBtn } from './ImageGallery.styled';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import { Modal } from 'components/Modal/Modal';
