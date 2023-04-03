@@ -1,39 +1,38 @@
 import { Overlay, ModalImg, ModalPic } from './Modal.styled';
 import { createPortal } from 'react-dom';
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const modalWindow = document.querySelector('#modal');
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.onEscModal);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscModal);
-  }
+export function Modal({ src, closeModal }) {
+  useEffect(() => {
+    window.addEventListener('keydown', onEscModal);
 
-  onEscModal = e => {
+    return () => {
+      window.removeEventListener('keydown', onEscModal);
+    };
+  }, []);
+
+  const onEscModal = e => {
     if (e.code === 'Escape') {
-      this.props.closeModal();
+      closeModal();
     }
   };
-  onBackClose = e => {
+  const onBackClose = e => {
     if (e.currentTarget === e.target) {
-      this.props.closeModal();
+      closeModal();
     }
   };
 
-  render() {
-    return createPortal(
-      <Overlay onClick={this.onBackClose}>
-        <ModalImg>
-          <ModalPic src={this.props.src} alt="Рисунок в модалке" />
-        </ModalImg>
-      </Overlay>,
-      modalWindow
-    );
-  }
+  return createPortal(
+    <Overlay onClick={onBackClose}>
+      <ModalImg>
+        <ModalPic src={src} alt="Рисунок в модалке" />
+      </ModalImg>
+    </Overlay>,
+    modalWindow
+  );
 }
 
 Modal.propTypes = {

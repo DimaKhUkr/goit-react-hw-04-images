@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Header,
@@ -10,55 +10,49 @@ import {
 
 import { BsSearch } from 'react-icons/bs';
 
-export class Searchbar extends Component {
-  state = {
-    imgRequestName: '',
+export function Searchbar({ onSubmit }) {
+  const [imgRequestName, setImgRequestName] = useState('');
+
+  const handleChange = e => {
+    setImgRequestName(e.target.value.trim());
   };
 
-  handleChange = e => {
-    this.setState({ imgRequestName: e.target.value.trim() });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (this.state.imgRequestName.length > 0) {
-      this.props.onSubmit(this.state.imgRequestName.toLowerCase());
-      this.reset();
+    if (imgRequestName.length > 0) {
+      onSubmit(imgRequestName.toLowerCase());
+      // setImgRequestName('');
     }
   };
 
-  reset = () => this.setState({ imgRequestName: '' });
+  return (
+    <Header>
+      <SearchForm onSubmit={handleSubmit}>
+        <Button type="submit">
+          <ButtonLabel>
+            <BsSearch
+              style={{
+                height: '40px',
+                padding: 0,
+                color: 'black',
+                width: '40px',
+              }}
+            />
+          </ButtonLabel>
+        </Button>
 
-  render() {
-    return (
-      <Header>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <Button type="submit">
-            <ButtonLabel>
-              <BsSearch
-                style={{
-                  height: '40px',
-                  padding: 0,
-                  color: 'black',
-                  width: '40px',
-                }}
-              />
-            </ButtonLabel>
-          </Button>
-
-          <Input
-            value={this.state.imgRequestName}
-            onChange={this.handleChange}
-            className="input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-        </SearchForm>
-      </Header>
-    );
-  }
+        <Input
+          value={imgRequestName}
+          onChange={handleChange}
+          className="input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+        />
+      </SearchForm>
+    </Header>
+  );
 }
 
 Searchbar.propTypes = {

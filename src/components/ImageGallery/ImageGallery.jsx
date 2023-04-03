@@ -1,92 +1,86 @@
 import { Gallery, LoaderBtn } from './ImageGallery.styled';
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import { Modal } from 'components/Modal/Modal';
-import { fetchImg } from 'components/Fetch/fetch';
 import PropTypes from 'prop-types';
+import { fetchImg } from 'Fetch/fetch';
 
-export class ImageGallery extends Component {
-  state = {
-    imgArr: null,
-    modalImg: null,
-    loader: false,
-    page: 1,
-    showModal: false,
-  };
-  //   componentDidMount() {}
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.imgRequestName !== this.props.imgRequestName) {
-      this.setState({ loader: true });
-      this.setState({ imgArr: null });
-      this.getImgSet();
-    }
-    if (prevState.modalImg !== this.state.modalImg && this.state.modalImg) {
-      this.setState({ showModal: true });
-    }
+export function ImageGallery({ imgRequestName }) {
+  const [imgArr, setImgArr] = useState(null);
+  const [modalImg, setModalImg] = useState(null);
+  const [loader, setLoader] = useState(false);
+  const [page, setPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
 
-    if (prevState.page !== this.state.page) {
-      this.setState({ loader: true });
-      this.getImgSet();
+  useEffect(() => {
+    if (imgRequestName.length < 1) {
+      return;
     }
-  }
+    setLoader(true);
+    setImgArr(null);
+    getImgSet();
+  }, [imgRequestName]);
 
-  async getImgSet() {
-    const filtered = await fetchImg(this.props.imgRequestName, this.state.page);
-    this.setState({ loader: false });
-    if (this.state.imgArr) {
-      return this.setState(prevState => {
-        return { imgArr: [...prevState.imgArr, ...filtered] };
+  useEffect(() => {
+    if (modalImg) {
+      setShowModal(true);
+    }
+  }, [modalImg]);
+
+  useEffect(() => {
+    if (page === 1) {
+      return;
+    }
+    setLoader(true);
+    getImgSet();
+  }, [page]);
+
+  async function getImgSet() {
+    const filtered = await fetchImg(imgRequestName, page);
+    setLoader(false);
+    if (imgArr) {
+      console.log('я вызвался');
+      return setImgArr(prevState => {
+        return [...prevState, ...filtered];
       });
     }
-    return this.setState({ imgArr: filtered });
+    return setImgArr(filtered);
   }
 
-  closeModal = () => {
-    this.setState({ showModal: false });
-    this.setState({ modalImg: null });
+  const closeModal = () => {
+    setShowModal(false);
+    setModalImg(null);
   };
 
-  onImgClick = e => {
-    this.setState({ modalImg: e.currentTarget.alt });
+  const onImgClick = e => {
+    setModalImg(e.currentTarget.alt);
   };
 
-  onLoaderButton = () => {
-    this.setState(prevState => {
-      return {
-        page: prevState.page + 1,
-      };
-    });
+  const onLoaderButton = () => {
+    setPage(page + 1);
   };
 
-  isButtonVisible = () => {
-    if (this.state.imgArr?.length > 0 && !(this.state.imgArr?.length < 12)) {
+  const isButtonVisible = () => {
+    if (imgArr?.length > 0 && !(imgArr?.length < 12)) {
       return true;
     }
   };
 
-  render() {
-    return (
-      <>
-        <Gallery>
-          {this.state.showModal && (
-            <Modal closeModal={this.closeModal} src={this.state.modalImg} />
-          )}
-          {this.state.imgArr && (
-            <ImageGalleryItem
-              onImgClick={this.onImgClick}
-              imgArr={this.state.imgArr}
-            />
-          )}
-        </Gallery>
-        {this.state.loader && <Loader />}
-        {this.isButtonVisible() && (
-          <LoaderBtn onClick={this.onLoaderButton} type="button">
-            Load more
-          </LoaderBtn>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      <Gallery>
+        {showModal && <Modal closeModal={closeModal} src={modalImg} />}
+        {imgArr && <ImageGalleryItem onImgClick={onImgClick} imgArr={imgArr} />}
+      </Gallery>
+      {loader && <Loader />}
+      {isButtonVisible() && (
+        <LoaderBtn onClick={onLoaderButton} type="button">
+          Load more
+        </LoaderBtn>
+      )}
+    </>
+  );
 }
-ImageGalleryItem.propTypes = { imgRequestName: PropTypes.string.isRequired };
+
+ImageGallery.propTypes = { imgRequestName: PropTypes.string.isRequired };
