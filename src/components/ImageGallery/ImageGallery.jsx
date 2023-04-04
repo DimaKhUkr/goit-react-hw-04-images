@@ -19,7 +19,7 @@ export function ImageGallery({ imgRequestName }) {
     }
 
     async function getImgSetFirst() {
-      const filtered = await fetchImg(imgRequestName, page);
+      const filtered = await fetchImg(imgRequestName);
       setLoader(false);
       console.log(filtered, '1 zapros function');
       return setImgArr(filtered);
@@ -51,7 +51,7 @@ export function ImageGallery({ imgRequestName }) {
     setLoader(true);
 
     getImgSetUpdate();
-  }, [page]);
+  }, [page, imgRequestName]);
 
   const closeModal = () => {
     setShowModal(false);
