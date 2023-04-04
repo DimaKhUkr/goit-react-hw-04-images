@@ -17,7 +17,7 @@ export function Modal({ src, closeModal }) {
     return () => {
       window.removeEventListener('keydown', onEscModal);
     };
-  }, []);
+  }, [closeModal]);
 
   const onBackClose = e => {
     if (e.currentTarget === e.target) {
