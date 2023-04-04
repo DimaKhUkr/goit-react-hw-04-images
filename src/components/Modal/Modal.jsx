@@ -7,18 +7,18 @@ const modalWindow = document.querySelector('#modal');
 
 export function Modal({ src, closeModal }) {
   useEffect(() => {
+    const onEscModal = e => {
+      if (e.code === 'Escape') {
+        closeModal();
+      }
+    };
     window.addEventListener('keydown', onEscModal);
 
     return () => {
       window.removeEventListener('keydown', onEscModal);
     };
-  }, [closeModal]);
+  }, []);
 
-  const onEscModal = e => {
-    if (e.code === 'Escape') {
-      closeModal();
-    }
-  };
   const onBackClose = e => {
     if (e.currentTarget === e.target) {
       closeModal();
