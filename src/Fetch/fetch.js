@@ -26,6 +26,8 @@ export async function fetchImg(imgRequestName, page) {
         largeImageURL: imgSet.largeImageURL,
       };
     });
+    console.log(filtered);
+
     return filtered;
   } catch (error) {
     toast.error(error.message, {

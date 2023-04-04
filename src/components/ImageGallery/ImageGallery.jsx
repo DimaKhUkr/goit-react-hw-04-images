@@ -19,8 +19,8 @@ export function ImageGallery({ imgRequestName }) {
     }
     setLoader(true);
     setImgArr(null);
-    getImgSet();
-  }, [imgRequestName, page]);
+    getImgSetFirst();
+  }, [imgRequestName]);
 
   useEffect(() => {
     if (modalImg) {
@@ -33,19 +33,25 @@ export function ImageGallery({ imgRequestName }) {
       return;
     }
     setLoader(true);
-    getImgSet();
+
+    getImgSetUpdate();
   }, [page]);
 
-  async function getImgSet() {
+  async function getImgSetFirst() {
     const filtered = await fetchImg(imgRequestName, page);
     setLoader(false);
-    if (imgArr) {
-      console.log('я вызвался');
-      return setImgArr(prevState => {
-        return [...prevState, ...filtered];
-      });
-    }
+    console.log(filtered, '1 zapros function');
     return setImgArr(filtered);
+  }
+
+  async function getImgSetUpdate() {
+    const filtered = await fetchImg(imgRequestName, page);
+    setLoader(false);
+
+    console.log(filtered, '2 zapros function');
+    return setImgArr(prevState => {
+      return [...prevState, ...filtered];
+    });
   }
 
   const closeModal = () => {

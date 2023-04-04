@@ -12,7 +12,7 @@ export function Modal({ src, closeModal }) {
     return () => {
       window.removeEventListener('keydown', onEscModal);
     };
-  }, []);
+  }, [closeModal]);
 
   const onEscModal = e => {
     if (e.code === 'Escape') {
