@@ -21,7 +21,7 @@ export function ImageGallery({ imgRequestName }) {
     async function getImgSetFirst() {
       const filtered = await fetchImg(imgRequestName);
       setLoader(false);
-      console.log(filtered, '1 zapros function');
+      // console.log(filtered, '1 zapros function');
       return setImgArr(filtered);
     }
     setLoader(true);
@@ -43,7 +43,7 @@ export function ImageGallery({ imgRequestName }) {
       const filtered = await fetchImg(imgRequestName, page);
       setLoader(false);
 
-      console.log(filtered, '2 zapros function');
+      // console.log(filtered, '2 zapros function');
       return setImgArr(prevState => {
         return [...prevState, ...filtered];
       });
