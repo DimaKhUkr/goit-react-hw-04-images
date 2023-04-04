@@ -14,13 +14,13 @@ export function ImageGallery({ imgRequestName }) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (imgRequestName.length < 1) {
+    if (!imgRequestName) {
       return;
     }
     setLoader(true);
     setImgArr(null);
     getImgSet();
-  }, [imgRequestName]);
+  }, [imgRequestName, page]);
 
   useEffect(() => {
     if (modalImg) {
