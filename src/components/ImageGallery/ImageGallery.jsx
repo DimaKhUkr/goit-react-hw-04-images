@@ -17,6 +17,13 @@ export function ImageGallery({ imgRequestName }) {
     if (!imgRequestName) {
       return;
     }
+
+    async function getImgSetFirst() {
+      const filtered = await fetchImg(imgRequestName, page);
+      setLoader(false);
+      console.log(filtered, '1 zapros function');
+      return setImgArr(filtered);
+    }
     setLoader(true);
     setImgArr(null);
     getImgSetFirst();
@@ -32,27 +39,19 @@ export function ImageGallery({ imgRequestName }) {
     if (page === 1) {
       return;
     }
+    async function getImgSetUpdate() {
+      const filtered = await fetchImg(imgRequestName, page);
+      setLoader(false);
+
+      console.log(filtered, '2 zapros function');
+      return setImgArr(prevState => {
+        return [...prevState, ...filtered];
+      });
+    }
     setLoader(true);
 
     getImgSetUpdate();
   }, [page]);
-
-  async function getImgSetFirst() {
-    const filtered = await fetchImg(imgRequestName, page);
-    setLoader(false);
-    console.log(filtered, '1 zapros function');
-    return setImgArr(filtered);
-  }
-
-  async function getImgSetUpdate() {
-    const filtered = await fetchImg(imgRequestName, page);
-    setLoader(false);
-
-    console.log(filtered, '2 zapros function');
-    return setImgArr(prevState => {
-      return [...prevState, ...filtered];
-    });
-  }
 
   const closeModal = () => {
     setShowModal(false);
